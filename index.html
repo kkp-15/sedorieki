@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>せどり利益計算ツール</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1 {
+            text-align: center;
+        }
+        form {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            background-color: #f9f9f9;
+        }
+        label {
+            display: block;
+            margin-bottom: 10px;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .result {
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>せどり利益計算ツール</h1>
+    <form id="sedoriForm">
+        <label>
+            仕入価格 (円):
+            <input type="number" id="purchasePrice" placeholder="例: 1000" required>
+        </label>
+        <label>
+            販売価格 (円):
+            <input type="number" id="sellingPrice" placeholder="例: 2000" required>
+        </label>
+        <label>
+            送料・梱包費 (円):
+            <input type="number" id="shippingCost" placeholder="例: 300" required>
+        </label>
+        <label>
+            手数料率 (%):
+            <input type="number" id="feeRate" placeholder="例: 10" required>
+        </label>
+    </form>
+
+    <div class="result">
+        <h2>計算結果</h2>
+        <p>利益 (円): <span id="profit">-</span></p>
+        <p>利益率 (%): <span id="profitRate">-</span></p>
+    </div>
+
+    <script>
+        // 各入力フィールドの要素を取得
+        const purchasePriceInput = document.getElementById('purchasePrice');
+        const sellingPriceInput = document.getElementById('sellingPrice');
+        const shippingCostInput = document.getElementById('shippingCost');
+        const feeRateInput = document.getElementById('feeRate');
+
+        // 結果表示用の要素を取得
+        const profitDisplay = document.getElementById('profit');
+        const profitRateDisplay = document.getElementById('profitRate');
+
+        // 入力値が変更されたときに計算を実行
+        document.getElementById('sedoriForm').addEventListener('input', calculateProfit);
+
+        function calculateProfit() {
+            // 入力値を取得し、数値に変換
+            const purchasePrice = parseFloat(purchasePriceInput.value) || 0; // 仕入価格
+            const sellingPrice = parseFloat(sellingPriceInput.value) || 0; // 販売価格
+            const shippingCost = parseFloat(shippingCostInput.value) || 0; // 送料・梱包費
+            const feeRate = parseFloat(feeRateInput.value) || 0; // 手数料率(%)
+
+            // 手数料額を計算
+            const feeAmount = sellingPrice * (feeRate / 100);
+
+            // 利益を計算
+            const profit = sellingPrice - purchasePrice - shippingCost - feeAmount;
+
+            // 利益率を計算（販売価格が0の場合は0%）
+            const profitRate = sellingPrice > 0 ? (profit / sellingPrice) * 100 : 0;
+
+            // 計算結果を表示
+            profitDisplay.textContent = profit.toFixed(2); // 小数点第2位まで表示
+            profitRateDisplay.textContent = profitRate.toFixed(2); // 小数点第2位まで表示
+        }
+    </script>
+</body>
+</html>
