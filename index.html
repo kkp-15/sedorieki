@@ -12,16 +12,24 @@
             max-width: 500px;
             margin: auto;
         }
+        h1 {
+            font-size: 2.5em;
+        }
+        label {
+            font-size: 1.8em;
+            display: block;
+            margin-top: 15px;
+        }
         input {
             width: 100%;
-            padding: 15px;
-            font-size: 1.5em;
+            padding: 20px;
+            font-size: 2em;
             margin: 10px 0;
             text-align: right;
             box-sizing: border-box;
         }
-        #profit {
-            font-size: 2em;
+        #profit, #profitRate {
+            font-size: 2.5em;
             font-weight: bold;
             color: #ff4500;
             margin-top: 20px;
@@ -39,24 +47,25 @@
     <label>送料・梱包費（円）:</label>
     <input type="number" id="shipping" placeholder="例: 500" oninput="calculateProfit()">
     
-    <label>手数料（円）:</label>
-    <input type="number" id="fee" placeholder="例: 300" oninput="calculateProfit()">
+    <label>手数料（%）:</label>
+    <input type="number" id="feePercent" placeholder="例: 10" oninput="calculateProfit()">
     
     <div id="profit">利益: 0円</div>
+    <div id="profitRate">利益率: 0%</div>
     
     <script>
         function saveValues() {
             localStorage.setItem('purchase', document.getElementById('purchase').value);
             localStorage.setItem('sell', document.getElementById('sell').value);
             localStorage.setItem('shipping', document.getElementById('shipping').value);
-            localStorage.setItem('fee', document.getElementById('fee').value);
+            localStorage.setItem('feePercent', document.getElementById('feePercent').value);
         }
 
         function loadValues() {
             document.getElementById('purchase').value = localStorage.getItem('purchase') || '';
             document.getElementById('sell').value = localStorage.getItem('sell') || '';
             document.getElementById('shipping').value = localStorage.getItem('shipping') || '';
-            document.getElementById('fee').value = localStorage.getItem('fee') || '';
+            document.getElementById('feePercent').value = localStorage.getItem('feePercent') || '';
             calculateProfit();
         }
 
@@ -64,9 +73,13 @@
             let purchase = parseFloat(document.getElementById('purchase').value) || 0;
             let sell = parseFloat(document.getElementById('sell').value) || 0;
             let shipping = parseFloat(document.getElementById('shipping').value) || 0;
-            let fee = parseFloat(document.getElementById('fee').value) || 0;
+            let feePercent = parseFloat(document.getElementById('feePercent').value) || 0;
+            let fee = (sell * feePercent) / 100;
             let profit = sell - (purchase + shipping + fee);
+            let profitRate = sell > 0 ? (profit / sell * 100).toFixed(2) : 0;
+            
             document.getElementById('profit').textContent = `利益: ${profit.toLocaleString()}円`;
+            document.getElementById('profitRate').textContent = `利益率: ${profitRate}%`;
             saveValues();
         }
 
