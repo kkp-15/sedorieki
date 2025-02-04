@@ -36,24 +36,36 @@
     <label>販売価格（円）:</label>
     <input type="number" id="sell" placeholder="例: 8000" oninput="calculateProfit()">
     
+    <label>送料・梱包費（円）:</label>
+    <input type="number" id="shipping" placeholder="例: 500" oninput="calculateProfit()">
+    
+    <label>手数料（円）:</label>
+    <input type="number" id="fee" placeholder="例: 300" oninput="calculateProfit()">
+    
     <div id="profit">利益: 0円</div>
     
     <script>
         function saveValues() {
             localStorage.setItem('purchase', document.getElementById('purchase').value);
             localStorage.setItem('sell', document.getElementById('sell').value);
+            localStorage.setItem('shipping', document.getElementById('shipping').value);
+            localStorage.setItem('fee', document.getElementById('fee').value);
         }
 
         function loadValues() {
             document.getElementById('purchase').value = localStorage.getItem('purchase') || '';
             document.getElementById('sell').value = localStorage.getItem('sell') || '';
+            document.getElementById('shipping').value = localStorage.getItem('shipping') || '';
+            document.getElementById('fee').value = localStorage.getItem('fee') || '';
             calculateProfit();
         }
 
         function calculateProfit() {
             let purchase = parseFloat(document.getElementById('purchase').value) || 0;
             let sell = parseFloat(document.getElementById('sell').value) || 0;
-            let profit = sell - purchase;
+            let shipping = parseFloat(document.getElementById('shipping').value) || 0;
+            let fee = parseFloat(document.getElementById('fee').value) || 0;
+            let profit = sell - (purchase + shipping + fee);
             document.getElementById('profit').textContent = `利益: ${profit.toLocaleString()}円`;
             saveValues();
         }
